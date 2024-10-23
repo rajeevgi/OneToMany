@@ -73,6 +73,14 @@ public class DemoController {
 
     }
 
+    // Get Mapping to fetch instructor using join fetch 
+    @GetMapping("/getInstructorJoinFetch/{id}")
+    public Instructor getInstructorJoinFetch(@PathVariable int id){
+
+        Instructor instructor = appDao.findByInstructorJoinFetch(id);
+        return instructor;
+    }
+
     // delete mapping for Instructor 
     @DeleteMapping("/instructor/{id}")
     public String deleteInstructorById(@PathVariable int id) {

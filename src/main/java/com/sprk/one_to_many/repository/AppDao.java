@@ -10,6 +10,7 @@ import com.sprk.one_to_many.entity.Instructor;
 import com.sprk.one_to_many.entity.InstructorDetail;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Id;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,11 @@ public class AppDao {
         Instructor instructor = findByInstructorId(id);
 
         if (instructor != null) {
+
+            List<Course> courses = instructor.getCourses();
+            for(Course course : courses){
+                course.setInstructor(null);
+            }
             entityManager.remove(instructor);
             return "Deleted Successfully";
         }else{
@@ -116,6 +122,18 @@ public class AppDao {
         List<Course> courses = query.getResultList();
 
         return courses;
+    }
+
+    // Get mapping to get details of Instructor using jpql
+    public Instructor findByInstructorJoinFetch(int id) {
+        
+        TypedQuery<Instructor> query = entityManager.createQuery("from Instructor i join fetch i.courses join fetch i.instructorDetail where i.id = :data", Instructor.class);
+
+        query.setParameter("data", id);
+
+        Instructor instructor = query.getSingleResult();
+
+        return instructor;
     }
 
 }

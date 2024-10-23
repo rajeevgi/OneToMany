@@ -40,7 +40,7 @@ public class Instructor {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH}, mappedBy = "instructor")  // One to many relationship mapping
     @JsonManagedReference
-    @JsonIgnore
+    // @JsonIgnore
     private List<Course> courses;
 
     void addCourse(Course course){
