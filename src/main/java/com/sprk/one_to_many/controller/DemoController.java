@@ -27,12 +27,16 @@ public class DemoController {
     @PostMapping("/save")
     public Instructor saveInstructor(@RequestBody Instructor instructor) {
 
-        List<Course> courses = instructor.getCourses();
+        if(instructor.getCourses() != null){
+            List<Course> courses = instructor.getCourses();
 
-        for(Course course : courses){
-            course.setInstructor(instructor);
+            for(Course course : courses){
+                course.setInstructor(instructor);
+            }
+        }else{
+            instructor.setCourses(null);
         }
-
+       
         return appDao.saveInstructor(instructor);
     }
 
@@ -43,6 +47,11 @@ public class DemoController {
 
             return appDao.saveInstructor(instructor);
     }
+
+    /*@PostMapping("/saveInstructor")
+    public Instructor savInstructor(@RequestBody InstructorDetail instructorDetail){
+        
+    }*/
 
     // Get Mapping to get instructor by id
     @GetMapping("/showInstructors/{id}")
@@ -79,6 +88,13 @@ public class DemoController {
 
         Instructor instructor = appDao.findByInstructorJoinFetch(id);
         return instructor;
+    }
+
+    // Get mapping to fetch all the courses 
+    @GetMapping("/getCourses")
+    public List<Course> getAllCourses(){
+
+        return appDao.getAllCourses();
     }
 
     // delete mapping for Instructor 
@@ -126,6 +142,17 @@ public class DemoController {
         return appDao.updateInstructorDetails(id, instructorDetail);       
     }
 
+    // Update Courses
+    @PutMapping("/updateCourse/{id}")
+    public String updateCourses(@RequestBody Course course, @PathVariable int id){
+        return appDao.updateCourses(course, id);
+    }
+
+    // Update Courses which is deletd
+    @PutMapping("/updateInstructorInCourse/{CourseId}/{InstructorId}")
+    public String updateDetail(@PathVariable int CourseId, @PathVariable int InstructorId){
+        return appDao.updateInstructorInCourse(CourseId, InstructorId);
+    }
 
     // Finding courses  based on instructorId
     @GetMapping("/getCourseById/{id}")
