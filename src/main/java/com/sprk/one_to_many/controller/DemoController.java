@@ -161,4 +161,10 @@ public class DemoController {
 
         return courses;
     }
+
+    // Put mapping to remove Instructor from Course
+    @PutMapping("/deleteInstructorFromCourse/{CourseId}")
+    public String deleteInstructorInCourse(@PathVariable int CourseId){
+        return appDao.deleteInstructorFromCourse(CourseId);
+    }
 }

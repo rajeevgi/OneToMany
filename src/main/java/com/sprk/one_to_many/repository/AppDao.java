@@ -10,7 +10,6 @@ import com.sprk.one_to_many.entity.Instructor;
 import com.sprk.one_to_many.entity.InstructorDetail;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Id;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -146,38 +145,52 @@ public class AppDao {
     // Put mapping to update Courses
     @Transactional
     public String updateCourses(Course course, int id) {
-        
+
         Course dbCourse = entityManager.find(Course.class, id);
 
-        if(dbCourse != null){
+        if (dbCourse != null) {
             course.setCourseId(id);
 
             entityManager.merge(course);
             return "updated Successfully...";
         }
 
+        return "Course with ID: " + id + " not found...";
 
-        return "Course with ID: "+id+" not found...";
-        
     }
 
-     // Update mapping to update InstructorDetail
-     @Transactional
+    // Update mapping to update InstructorDetail
+    @Transactional
     public String updateInstructorInCourse(int courseId, int instructorId) {
-        
+
         Course dbCourse = entityManager.find(Course.class, courseId);
         Instructor instructor = findByInstructorId(instructorId);
 
-        if(dbCourse != null && instructor != null){
+        if (dbCourse != null && instructor != null) {
 
             dbCourse.setInstructor(instructor);
             entityManager.merge(dbCourse);
 
             return "update Successful...";
-        }else if(dbCourse == null){
-            return "Course with Id"+courseId+" not found!";
-        }else{
-            return "Instructor with Id"+instructorId+" not found!";
+        } else if (dbCourse == null) {
+            return "Course with Id" + courseId + " not found!";
+        } else {
+            return "Instructor with Id" + instructorId + " not found!";
+        }
+    }
+
+    @Transactional
+    public String deleteInstructorFromCourse(int CourseId) {
+        Course dbCourse = entityManager.find(Course.class, CourseId);
+        // Instructor instructor = findByInstructorId(instructorId);
+
+        if (dbCourse != null) {
+            dbCourse.setInstructor(null);
+            entityManager.merge(dbCourse);
+
+            return "Instructor Removed Successfully....";
+        } else {
+            return "Course with Id" + CourseId + " not found!";
         }
     }
 
